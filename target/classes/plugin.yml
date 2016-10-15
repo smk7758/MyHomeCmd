@@ -9,8 +9,11 @@ permissions:
       MyHomeCmd.cmd: true
       MyHomeCmd.home: true
     default: false
-  MyHomeCmd.cmd:
-    description: Gives the user access to MyHomeCmd command.
+  MyHomeCmd.list:
+    description: Gives the user access to ListHome command.
+    default: false
+  MyHomeCmd.set:
+    description: Gives the user access to SetHome command.
     default: false
   MyHomeCmd.home:
     description: Gives the user access to Home command.

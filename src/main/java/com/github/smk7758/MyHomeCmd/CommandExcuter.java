@@ -37,6 +37,10 @@ public class CommandExcuter implements CommandExecutor {
 				return false;
 			}
 			if (args.length > 0) {
+				if (args[0].contains(".")) {
+					plugin.cLog.sendMessage(sender, "Sorry you can't set \".\" inside the home.", 2);
+					return false;
+				}
 				String path = player.getName() + "." + args[0];
 				if (plugin.home_player.containsKey(path)) {
 					if (plugin.getConfig().contains(path)) {
@@ -56,18 +60,20 @@ public class CommandExcuter implements CommandExecutor {
 				return false;
 			}
 			Player player = (Player) sender;
-			if (!sender.hasPermission("MyHomeCmd.set")) {
-				plugin.cLog.sendPermissionErrorMessage(sender, "MyHomeCmd.set");
+			if (!sender.hasPermission("MyHomeCmd.list")) {
+				plugin.cLog.sendPermissionErrorMessage(sender, "MyHomeCmd.list");
 				return false;
 			}
 			if (args.length == 0) {
 				plugin.cLog.sendMessage(sender, "<Home List>", 0);
-				for (String home_player_ : plugin.home_player.keySet()) {
-					player.sendMessage(home_player_);
-					player.sendMessage(home_player_.split("."));
-					String home_player_name = home_player_.split(".")[1];
-					if (player.getName().equals(home_player_name)) {
-						plugin.cLog.sendMessage(sender, home_player_.split(".")[1], 0);
+				for (String home_player_ : plugin.home_player.keySet()) { //HashMapより。
+					if (player.getName().equals(home_player_.split("\\.")[0])) {
+						plugin.cLog.sendMessage(sender, home_player_.split("\\.", 2)[1], 0);
+					}
+				}
+				if (plugin.getConfig().contains(player.getName())) { //Configより。
+					for (String name : plugin.getConfig().getConfigurationSection(player.getName()).getKeys(false)) {
+						plugin.cLog.sendMessage(sender, name, 0);
 					}
 				}
 				return true;
