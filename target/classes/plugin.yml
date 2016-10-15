@@ -1,16 +1,29 @@
 name: MyHomeCmd
 main: com.github.smk7758.MyHomeCmd.Main
-version: 0.0.1
+version: 0.0.2
 author: smk7758
 permissions:
   MyHomeCmd.*:
     description: Gives the user access to all command.
     children:
-      MyHomeCmd.cmd: true
+      MyHomeCmd.reload: true
+      MyHomeCmd.debug: true
+      MyHomeCmd.list: true
+      MyHomeCmd.delete: true
+      MyHomeCmd.set: true
       MyHomeCmd.home: true
+    default: false
+  MyHomeCmd.reload:
+    description: Gives the user access to MyHomeCmd reload command.
+    default: false
+  MyHomeCmd.debug:
+    description: Gives the user access to MyHomeCmd debug command.
     default: false
   MyHomeCmd.list:
     description: Gives the user access to ListHome command.
+    default: false
+  MyHomeCmd.delete:
+    description: Gives the user access to DeleteHome command.
     default: false
   MyHomeCmd.set:
     description: Gives the user access to SetHome command.
@@ -27,6 +40,10 @@ commands:
     description: MyChestCmd.
     permission-message: You don't have <permission>
     aliases: homeset
+  DeleteHome:
+    description: MyChestCmd.
+    permission-message: You don't have <permission>
+    aliases: homedelete, delhome, homedel
   ListHome:
     description: MyChestCmd.
     permission-message: You don't have <permission>

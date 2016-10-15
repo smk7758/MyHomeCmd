@@ -10,13 +10,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.smk7758.MyHomeCmd.ConsoleLog;
 
 public class Main extends JavaPlugin implements Listener {
-	// private static final Main instance = new Main();
-	// private Main() {
-	// }
-	// public static Main getInstance() {
-	// return instance;
-	// }
-	// CommandExcuter Cmder = CommandExcuter.getInstance();
 	public ConsoleLog cLog = new ConsoleLog(this);
 
 	public HashMap<String, Location> home_player = new HashMap<>(); // PlayerName.HomeName | Location

@@ -22,6 +22,44 @@ public class CommandExcuter implements CommandExecutor {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if (cmd.getName().equalsIgnoreCase("MyHomeCmd")) {
+			if (args.length == 0) {
+				sendCommandList(sender);
+				return true;
+			}
+			if (args.length > 0) {
+				if (args[0].equalsIgnoreCase("reload")) {
+					if (!sender.hasPermission("MyHomeCmd.reload") && (sender instanceof Player)) {
+						plugin.cLog.sendPermissionErrorMessage(sender, "MyHomeCmd.reload");
+						return false;
+					}
+					plugin.reloadConfig();
+					return true;
+					//これ必要なのか分からない。
+				}
+				if (args[0].equalsIgnoreCase("help")) {
+					plugin.cLog.sendMessage(sender, "This plugin can set your Home. And you can set the name of Home.", 0);
+					sendCommandList(sender);
+					return true;
+				}
+				if (args[0].equalsIgnoreCase("debug")) {
+					if (!sender.hasPermission("MyHomeCmd.debug") && (sender instanceof Player)) {
+						plugin.cLog.sendPermissionErrorMessage(sender, "MyHomeCmd.debug");
+						return false;
+					}
+					if (plugin.DebugMode) {
+						plugin.DebugMode = false;
+						plugin.cLog.sendMessage(sender, "DebugMode has been false.", 0);
+					} else {
+						plugin.DebugMode = true;
+						plugin.cLog.sendMessage(sender, "DebugMode has been true.", 0);
+					}
+					plugin.cLog.sendMessage(sender, "This is a check. DebugMode is true.", 3);
+					return true;
+				}
+			}
+			sendCommandList(sender);
+		}
 		if (cmd.getName().equalsIgnoreCase("SetHome")) {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage("Must send from Player.");
@@ -33,12 +71,12 @@ public class CommandExcuter implements CommandExecutor {
 				return false;
 			}
 			if (args.length == 0) {
-				plugin.cLog.sendMessage(sender, "Please set home name.", 2);
+				plugin.cLog.sendMessage(sender, "Please set Home name.", 2);
 				return false;
 			}
 			if (args.length > 0) {
 				if (args[0].contains(".")) {
-					plugin.cLog.sendMessage(sender, "Sorry you can't set \".\" inside the home.", 2);
+					plugin.cLog.sendMessage(sender, "Sorry you can't set \".\" inside the Home.", 2);
 					return false;
 				}
 				String path = player.getName() + "." + args[0];
@@ -52,6 +90,38 @@ public class CommandExcuter implements CommandExecutor {
 				plugin.home_player.put(path, loc);
 				plugin.cLog.sendMessage(sender, args[0] + " has been set.", 0);
 				return true;
+			}
+		}
+		if (cmd.getName().equalsIgnoreCase("DeleteHome")) {
+			if (!(sender instanceof Player)) {
+				sender.sendMessage("Must send from Player.");
+				return false;
+			}
+			Player player = (Player) sender;
+			if (!sender.hasPermission("MyHomeCmd.delete")) {
+				plugin.cLog.sendPermissionErrorMessage(sender, "MyHomeCmd.delete");
+				return false;
+			}
+			if (args.length == 0) {
+				plugin.cLog.sendMessage(sender, "Please set Home name.", 2);
+				return false;
+			}
+			if (args.length > 0) {
+				if (args[0].contains(".")) {
+					plugin.cLog.sendMessage(sender, "Sorry you can't set \".\" inside the Home.", 2);
+					return false;
+				}
+				String path = player.getName() + "." + args[0];
+				if (plugin.home_player.containsKey(path) || plugin.getConfig().contains(path)) {
+					plugin.home_player.remove(path);
+					plugin.getConfig().set(path, null);
+					plugin.saveConfig();
+					plugin.cLog.sendMessage(sender, args[0] + " has been delete.", 0);
+					return true;
+				} else {
+					plugin.cLog.sendMessage(sender, args[0] + " does not exist.", 2);
+					return false;
+				}
 			}
 		}
 		if (cmd.getName().equalsIgnoreCase("ListHome")) {
@@ -90,7 +160,7 @@ public class CommandExcuter implements CommandExecutor {
 				return false;
 			}
 			if (args.length == 0) {
-				plugin.cLog.sendMessage(sender, "Please set home name.", 2);
+				plugin.cLog.sendMessage(sender, "Please set Home name.", 2);
 				return false;
 			}
 			if (args.length > 0) {
@@ -115,4 +185,11 @@ public class CommandExcuter implements CommandExecutor {
 		return false;
 	}
 
+	public void sendCommandList(CommandSender sender) {
+		plugin.cLog.sendMessage(sender, "Command List!!", 0);
+		plugin.cLog.sendMessage(sender, "TP Home: /home", 0);
+		plugin.cLog.sendMessage(sender, "Set Home: /sethome, /homeset", 0);
+		plugin.cLog.sendMessage(sender, "Show Home List: /listhome, /homelist", 0);
+		plugin.cLog.sendMessage(sender, "Other: /MyHomeCmd, /mhc", 0);
+	}
 }
