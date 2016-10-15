@@ -1,0 +1,33 @@
+name: MyHomeCmd
+main: com.github.smk7758.MyHomeCmd.Main
+version: 0.0.1
+author: smk7758
+permissions:
+  MyHomeCmd.*:
+    description: Gives the user access to all command.
+    children:
+      MyHomeCmd.cmd: true
+      MyHomeCmd.home: true
+    default: false
+  MyHomeCmd.cmd:
+    description: Gives the user access to MyHomeCmd command.
+    default: false
+  MyHomeCmd.home:
+    description: Gives the user access to Home command.
+    default: false
+commands:
+  MyHomeCmd:
+    description: MyChestCmd.
+    permission-message: You don't have <permission>
+    aliases: mhc
+  SetHome:
+    description: MyChestCmd.
+    permission-message: You don't have <permission>
+    aliases: homeset
+  ListHome:
+    description: MyChestCmd.
+    permission-message: You don't have <permission>
+    aliases: homelist
+  Home:
+    description: MyChestCmd.
+    permission-message: You don't have <permission>
