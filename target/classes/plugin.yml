@@ -43,7 +43,6 @@ commands:
   DeleteHome:
     description: MyChestCmd.
     permission-message: You don't have <permission>
-    aliases: homedelete, delhome, homedel
   ListHome:
     description: MyChestCmd.
     permission-message: You don't have <permission>

@@ -25,6 +25,7 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(this, this);
 		getCommand("MyHomeCmd").setExecutor(new CommandExcuter(this));
 		getCommand("SetHome").setExecutor(new CommandExcuter(this));
+		getCommand("DeleteHome").setExecutor(new CommandExcuter(this));
 		getCommand("ListHome").setExecutor(new CommandExcuter(this));
 		getCommand("Home").setExecutor(new CommandExcuter(this));
 		saveDefaultConfig();
