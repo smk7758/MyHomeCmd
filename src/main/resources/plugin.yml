@@ -33,21 +33,16 @@ permissions:
     default: false
 commands:
   MyHomeCmd:
-    description: MyChestCmd.
-    permission-message: You don't have <permission>
+    description: MyHomeCmd.
     aliases: mhc
   SetHome:
-    description: MyChestCmd.
-    permission-message: You don't have <permission>
+    description: MyHomeCmd.
     aliases: homeset
   DeleteHome:
-    description: MyChestCmd.
-    permission-message: You don't have <permission>
+    description: MyHomeCmd.
     aliases: homedelete, delhome, homedel
   ListHome:
-    description: MyChestCmd.
-    permission-message: You don't have <permission>
+    description: MyHomeCmd.
     aliases: homelist
   Home:
-    description: MyChestCmd.
-    permission-message: You don't have <permission>
+    description: MyHomeCmd.

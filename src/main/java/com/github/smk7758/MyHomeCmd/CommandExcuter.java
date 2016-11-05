@@ -189,6 +189,7 @@ public class CommandExcuter implements CommandExecutor {
 		plugin.cLog.sendMessage(sender, "Command List!!", 0);
 		plugin.cLog.sendMessage(sender, "TP Home: /home", 0);
 		plugin.cLog.sendMessage(sender, "Set Home: /sethome, /homeset", 0);
+		plugin.cLog.sendMessage(sender, "Delete Home: /deletehome, /homedelete, /delhome, /homedel", 0);
 		plugin.cLog.sendMessage(sender, "Show Home List: /listhome, /homelist", 0);
 		plugin.cLog.sendMessage(sender, "Other: /MyHomeCmd, /mhc", 0);
 	}
