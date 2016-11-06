@@ -12,13 +12,13 @@ import com.github.smk7758.MyHomeCmd.ConsoleLog;
 public class Main extends JavaPlugin implements Listener {
 	public ConsoleLog cLog = new ConsoleLog(this);
 
-	public HashMap<String, Location> home_player = new HashMap<>(); // PlayerName.HomeName | Location
 	public String PluginName = getDescription().getName();
 	public boolean DebugMode = false;
 	public String PluginPrefix = "[" + ChatColor.GREEN + PluginName + ChatColor.RESET + "] ";
 	public String cPrefix = "[" + PluginName + "] ";
 	public String pInfo = "[" + ChatColor.RED + "Info" + ChatColor.RESET + "] ";
 	public String pError = "[" + ChatColor.RED + "ERROR" + ChatColor.RESET + "] ";
+	public HashMap<String, Location> home_player = new HashMap<>(); // PlayerName.HomeName | Location
 
 	@Override
 	public void onEnable() {
@@ -30,6 +30,7 @@ public class Main extends JavaPlugin implements Listener {
 		getCommand("Home").setExecutor(new CommandExcuter(this));
 		saveDefaultConfig();
 		reloadConfig();
+		DebugMode = getConfig().getBoolean("DebugMode"); //ãNìÆéûÇÃDebugModeÅB
 	}
 
 	@Override

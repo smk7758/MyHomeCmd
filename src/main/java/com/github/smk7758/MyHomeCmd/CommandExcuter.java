@@ -7,14 +7,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandExcuter implements CommandExecutor {
-	// private static final CommandExcuter instance = new CommandExcuter();
-	// private CommandExcuter() {
-	// }
-	// public static CommandExcuter getInstance() {
-	// return instance;
-	// }
-	// Main plugin = Main.getInstance();
-
 	private Main plugin;
 
 	public CommandExcuter(Main instance) {
@@ -57,101 +49,26 @@ public class CommandExcuter implements CommandExecutor {
 					plugin.cLog.sendMessage(sender, "This is a check. DebugMode is true.", 3);
 					return true;
 				}
+				if (args[0].equalsIgnoreCase("show_all_list")) {
+					if (!(sender instanceof Player) && !sender.hasPermission("MyHomeCmd.show_all_list")) {
+						plugin.cLog.sendPermissionErrorMessage(sender, "MyHomeCmd.show_all_list");
+						return false;
+					}
+					plugin.cLog.sendMessage(sender, "<HomeList>", 0);
+					for (String path : plugin.home_player.keySet()) { //HashMapより。
+							plugin.cLog.sendMessage(sender, path, 0);
+					}
+					for (String name : plugin.getConfig().getConfigurationSection("HomeContents").getKeys(true)) {
+						plugin.cLog.sendMessage(sender, name, 0);
+					}
+					return true;
+				}
 			}
 			sendCommandList(sender);
 		}
-		if (cmd.getName().equalsIgnoreCase("SetHome")) {
-			if (!(sender instanceof Player)) {
-				sender.sendMessage("Must send from Player.");
-				return false;
-			}
-			Player player = (Player) sender;
-			if (!sender.hasPermission("MyHomeCmd.set")) {
-				plugin.cLog.sendPermissionErrorMessage(sender, "MyHomeCmd.set");
-				return false;
-			}
-			if (args.length == 0) {
-				plugin.cLog.sendMessage(sender, "Please set Home name.", 2);
-				return false;
-			}
-			if (args.length > 0) {
-				if (args[0].contains(".")) {
-					plugin.cLog.sendMessage(sender, "Sorry you can't set \".\" inside the Home.", 2);
-					return false;
-				}
-				String path = player.getName() + "." + args[0];
-				if (plugin.home_player.containsKey(path)) {
-					if (plugin.getConfig().contains(path)) {
-						plugin.cLog.sendMessage(sender, args[0] + " is already setted.", 2);
-						return false;
-					}
-				}
-				Location loc = player.getLocation();
-				plugin.home_player.put(path, loc);
-				plugin.cLog.sendMessage(sender, args[0] + " has been set.", 0);
-				return true;
-			}
-		}
-		if (cmd.getName().equalsIgnoreCase("DeleteHome")) {
-			if (!(sender instanceof Player)) {
-				sender.sendMessage("Must send from Player.");
-				return false;
-			}
-			Player player = (Player) sender;
-			if (!sender.hasPermission("MyHomeCmd.delete")) {
-				plugin.cLog.sendPermissionErrorMessage(sender, "MyHomeCmd.delete");
-				return false;
-			}
-			if (args.length == 0) {
-				plugin.cLog.sendMessage(sender, "Please set Home name.", 2);
-				return false;
-			}
-			if (args.length > 0) {
-				if (args[0].contains(".")) {
-					plugin.cLog.sendMessage(sender, "Sorry you can't set \".\" inside the Home.", 2);
-					return false;
-				}
-				String path = player.getName() + "." + args[0];
-				if (plugin.home_player.containsKey(path) || plugin.getConfig().contains(path)) {
-					plugin.home_player.remove(path);
-					plugin.getConfig().set(path, null);
-					plugin.saveConfig();
-					plugin.cLog.sendMessage(sender, args[0] + " has been delete.", 0);
-					return true;
-				} else {
-					plugin.cLog.sendMessage(sender, args[0] + " does not exist.", 2);
-					return false;
-				}
-			}
-		}
-		if (cmd.getName().equalsIgnoreCase("ListHome")) {
-			if (!(sender instanceof Player)) {
-				sender.sendMessage("Must send from Player.");
-				return false;
-			}
-			Player player = (Player) sender;
-			if (!sender.hasPermission("MyHomeCmd.list")) {
-				plugin.cLog.sendPermissionErrorMessage(sender, "MyHomeCmd.list");
-				return false;
-			}
-			if (args.length == 0) {
-				plugin.cLog.sendMessage(sender, "<Home List>", 0);
-				for (String home_player_ : plugin.home_player.keySet()) { //HashMapより。
-					if (player.getName().equals(home_player_.split("\\.")[0])) {
-						plugin.cLog.sendMessage(sender, home_player_.split("\\.", 2)[1], 0);
-					}
-				}
-				if (plugin.getConfig().contains(player.getName())) { //Configより。
-					for (String name : plugin.getConfig().getConfigurationSection(player.getName()).getKeys(false)) {
-						plugin.cLog.sendMessage(sender, name, 0);
-					}
-				}
-				return true;
-			}
-		}
 		if (cmd.getName().equalsIgnoreCase("Home")) {
 			if (!(sender instanceof Player)) {
-				sender.sendMessage("Must send from Player.");
+				plugin.cLog.sendMessage(sender, "Must send from Player.", 2);
 				return false;
 			}
 			Player player = (Player) sender;
@@ -164,7 +81,7 @@ public class CommandExcuter implements CommandExecutor {
 				return false;
 			}
 			if (args.length > 0) {
-				String path = player.getName() + "." + args[0];
+				String path = "HomeContents." + player.getName() + "." + args[0];
 				if (!plugin.home_player.containsKey(path) || plugin.home_player.get(path) == null) {
 					if (plugin.getConfig().contains(path)) {
 						plugin.home_player.put(path, (Location) plugin.getConfig().get(path));
@@ -181,6 +98,92 @@ public class CommandExcuter implements CommandExecutor {
 					return true;
 				}
 			}
+		}
+		if (cmd.getName().equalsIgnoreCase("SetHome")) {
+			if (!(sender instanceof Player)) {
+				plugin.cLog.sendMessage(sender, "Must send from Player.", 2);
+				return false;
+			}
+			Player player = (Player) sender;
+			if (!sender.hasPermission("MyHomeCmd.set")) {
+				plugin.cLog.sendPermissionErrorMessage(sender, "MyHomeCmd.set");
+				return false;
+			}
+			if (args.length == 0) {
+				plugin.cLog.sendMessage(sender, "Please set Home name.", 2);
+				return false;
+			}
+			if (args.length > 0) {
+				if (args[0].contains(".")) {
+					plugin.cLog.sendMessage(sender, "Sorry you can't set \".\" inside the Home.", 2);
+					return false;
+				}
+				String path = "HomeContents." + player.getName() + "." + args[0];
+				if (plugin.home_player.containsKey(path) || plugin.getConfig().contains(path)) { //ちょっと修正している。
+					plugin.cLog.sendMessage(sender, args[0] + " is already setted.", 2);
+					return false;
+				}
+				Location loc = player.getLocation();
+				plugin.home_player.put(path, loc);
+				plugin.cLog.sendMessage(sender, args[0] + " has been set.", 0);
+				return true;
+			}
+		}
+		if (cmd.getName().equalsIgnoreCase("DeleteHome")) {
+			if (!(sender instanceof Player)) {
+				plugin.cLog.sendMessage(sender, "Must send from Player.", 2);
+				return false;
+			}
+			Player player = (Player) sender;
+			if (!sender.hasPermission("MyHomeCmd.delete")) {
+				plugin.cLog.sendPermissionErrorMessage(sender, "MyHomeCmd.delete");
+				return false;
+			}
+			if (args.length == 0) {
+				plugin.cLog.sendMessage(sender, "Please set Home name.", 2);
+				return false;
+			}
+			if (args.length > 0) {
+				if (args[0].contains(".")) {
+					plugin.cLog.sendMessage(sender, "Sorry you can't set \".\" inside the Home.", 2);
+					return false;
+				}
+				String path = "HomeContents." + player.getName() + "." + args[0];
+				if (plugin.home_player.containsKey(path) || plugin.getConfig().contains(path)) {
+					plugin.home_player.remove(path);
+					plugin.getConfig().set(path, null);
+					plugin.saveConfig();
+					plugin.cLog.sendMessage(sender, args[0] + " has been delete.", 0);
+					return true;
+				} else {
+					plugin.cLog.sendMessage(sender, args[0] + " does not exist.", 2);
+					return false;
+				}
+			}
+		}
+		if (cmd.getName().equalsIgnoreCase("ListHome")) {
+			if (!(sender instanceof Player)) {
+				plugin.cLog.sendMessage(sender, "Must send from Player.", 2);
+				return false;
+			}
+			Player player = (Player) sender;
+			if (!sender.hasPermission("MyHomeCmd.list")) {
+				plugin.cLog.sendPermissionErrorMessage(sender, "MyHomeCmd.list");
+				return false;
+			}
+			plugin.cLog.sendMessage(sender, "<HomeList>", 0);
+			for (String path : plugin.home_player.keySet()) { //HashMapより。
+				if (player.getName().equals(path.split("\\.")[1])) {
+					plugin.cLog.sendMessage(sender, path.split("\\.")[2], 0);
+				}
+			}
+			String path_ = "HomeContents." + player.getName();
+			if (plugin.getConfig().contains(path_)) { //Configより。
+				for (String name : plugin.getConfig().getConfigurationSection(path_).getKeys(false)) {
+					plugin.cLog.sendMessage(sender, name, 0);
+				}
+			}
+			return true;
 		}
 		return false;
 	}

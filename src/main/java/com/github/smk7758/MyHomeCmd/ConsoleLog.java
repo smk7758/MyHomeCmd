@@ -6,7 +6,6 @@
 package com.github.smk7758.MyHomeCmd;
 
 import java.util.logging.Logger;
-
 import org.bukkit.command.CommandSender;
 
 /**
@@ -14,29 +13,43 @@ import org.bukkit.command.CommandSender;
  */
 public class ConsoleLog {
 	private Main plugin;
+	public static final Logger log = Logger.getLogger("Minecraft");
 
 	public ConsoleLog(Main instance) {
 		plugin = instance;
 	}
 
-	public static final Logger log = Logger.getLogger("Minecraft");
-
+	/**
+	 * コンソール(Log)にメッセージを送る。
+	 * (動作に支障が無く情報を出すだけで良い時)
+	 *
+	 * @param msg メッセージ
+	 */
 	public void info(String msg) {
 		log.info(plugin.cPrefix + msg);
-		// 動作に支障が無く情報を出すだけで良い時
 	}
 
+	/**
+	 * コンソール(Log)にデバッグメッセージを送る。
+	 *
+	 * @param msg メッセージ
+	 */
 	public void debug(String msg) {
 		if (plugin.DebugMode) log.info(plugin.cPrefix + "[Debug] " + msg);
 	}
 
+	/**
+	 * コンソール(Log)に警告メッセージを送る。
+	 * (動作に支障がある時)
+	 *
+	 * @param msg メッセージ
+	 */
 	public void warn(String msg) {
 		log.warning(plugin.cPrefix + msg);
-		// 動作に支障がある時
 	}
 
 	/**
-	 * メッセージを送る
+	 * メッセージを送る。
 	 *
 	 * @param sender 宛先
 	 * @param msg メッセージ
